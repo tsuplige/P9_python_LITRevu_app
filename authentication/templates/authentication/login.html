@@ -1,0 +1,37 @@
+{% extends 'base.html' %} {% block content %}
+<div <div class="row mt-3" style="margin: 10% 0">
+    <div class="col-sm-6 mb-3 mb-sm-0">
+        <div class="home-signin" style="heigt: 10% 0">
+    <div class="card text-center">
+      <div class="card-header">Inscription</div>
+      <div class="card-body">
+        <p class="card-text">
+          Nouveau ? inscrivez vous pour consulter les review de roman !
+        </p>
+        <a href="{% url 'signup' %}" class="btn btn-primary">S'inscrire</a>
+      </div>
+    </div>
+  </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="home-login">
+    <div class="card text-center">
+      <div class="card-header">Connexion</div>
+      <div class="card-body">
+        <h5 class="card-title">connecter vous à LITRevu</h5>
+        {% comment %}
+        <p class="card-text">pour cosulter</p>
+        {% endcomment %}
+        <p class="card-text" style="color: red">{{ message }}</p>
+        <form method="post">
+          {{ form.as_p }} {% csrf_token %}
+          <button class="btn btn-primary" type="submit">Se connecter</button>
+        </form>
+      </div>
+    </div>
+  
+    </div>
+  </div>
+
+  {% endblock content %}
+</div>

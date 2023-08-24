@@ -1,8 +1,7 @@
 # P9_python_LITRevu_app
-```markdown
-# README pour le Projet LITRevu - Application Web Django
 
-![Logo LITRevu](https://www.liensurlimage.com)
+# LITRevu - Application Web Django
+
 
 ## Introduction
 
@@ -22,6 +21,8 @@ Bienvenue dans le README du projet LITRevu, une application web Django pour la p
 ## Installation
 
 Pour installer et exécuter cette application sur votre propre environnement de développement, suivez ces étapes :
+
+
 
 1. Clonez le référentiel depuis GitHub :
    ```bash

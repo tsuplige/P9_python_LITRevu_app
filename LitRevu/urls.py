@@ -2,6 +2,9 @@ from django.contrib import admin
 from django.urls import path
 import authentication.views
 import app.views
+from django.conf import settings
+from django.conf.urls.static import static
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -11,7 +14,7 @@ urlpatterns = [
 
     path('home/', app.views.home, name='home'),
 
-    path('ticket/', app.views.ticket, name='ticket'),
+    path('ticket/upload', app.views.ticket_upload, name='ticket-upload'),
     path('ticket/<int:id>/change/', app.views.ticket_update, name='ticket-update'),
 
     path('critique/', app.views.critique, name='critique'),
@@ -20,3 +23,7 @@ urlpatterns = [
     path('abonnements/', app.views.subscription, name='subscription'),
 
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(
+        settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,3 +1,55 @@
 .navbar {
     background-color: #9255FF;
 }
+
+body {
+    width: 100%;
+}
+
+.flux {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    margin: 3% 0;
+
+    &-center {
+        display: flex;
+        justify-content: center;
+
+        
+    }
+
+    &-nav {
+        margin: 3% 0;
+        a {
+            margin: 0 1%;
+        }
+    }
+
+    &-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        .card {
+        width: 45%;
+        margin-bottom: 3%;
+        }
+    }
+
+    ticket {
+        width: 45%;
+        &-img{
+            width: 30%;
+        }
+    }
+}
+
+
+.card-img, .card-img-bottom, .card-img-top {
+    
+}
+
+#ti-img {
+    height: 300px;
+    width: auto;
+}

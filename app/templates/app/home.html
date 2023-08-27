@@ -1,4 +1,37 @@
-{% extends 'base.html' %}
-{% block content %}
-    <p>Bienvenu !</p>
+{% extends 'base.html' %} {% block content %}
+<div class="flux">
+  <nav class="flux-nav flux-center">
+    <a href="{% url 'ticket-upload' %}" class="btn btn-primary"
+      >Demander une critique</a
+    >
+    <a href="{% url 'critique' %}" class="btn btn-primary"
+      >Créer une critique</a
+    >
+  </nav>
+
+  <div class="flux-content flux-center">
+    {% for item in combined_data %} {% if item.is_ticket is True %}
+
+    <div class="card text-center ticket">
+      <div class="card-header">{{ item.user }} demande une critique</div>
+      <div class="card-body">
+        <h5 class="card-title">{{ item.title }}</h5>
+        <p class="card-text">
+          {{ item.description }}
+        </p>
+        <img class="ticket-img card-img-top" id="ti-img" src="{{ item.image.url }}">
+      </div>
+      <div class="card-footer text-muted">{{ item.time_created }}</div>
+      <a href="#" class="btn btn-primary">Créer une critique</a>
+    </div>
+    {% else %}
+    <div class="review">
+      <h2>{{ item.headline }}</h2>
+      <p>{{ item.body }}</p>
+      <p>Date de création : {{ item.time_created }}</p>
+    </div>
+    {% endif %} {% endfor %}
+  </div>
+</div>
+
 {% endblock content %}

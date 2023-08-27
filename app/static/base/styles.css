@@ -1,3 +1,44 @@
 .navbar {
   background-color: #9255FF;
+}
+
+body {
+  width: 100%;
+}
+
+.flux {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  margin: 3% 0;
+}
+.flux-center {
+  display: flex;
+  justify-content: center;
+}
+.flux-nav {
+  margin: 3% 0;
+}
+.flux-nav a {
+  margin: 0 1%;
+}
+.flux-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.flux-content .card {
+  width: 45%;
+  margin-bottom: 3%;
+}
+.flux ticket {
+  width: 45%;
+}
+.flux ticket-img {
+  width: 30%;
+}
+
+#ti-img {
+  height: 300px;
+  width: auto;
 }/*# sourceMappingURL=styles.css.map */

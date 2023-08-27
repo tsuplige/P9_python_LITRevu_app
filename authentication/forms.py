@@ -11,10 +11,9 @@ class LoginForm(forms.Form):
 class SignupForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
         model = get_user_model()
-        fields = ('username', 'email', 'first_name', 'last_name')
+        fields = ('username',)
         help_texts = {
             'username': None,
-            'email': None,
             'password1': None,
             'password2': None,
         }

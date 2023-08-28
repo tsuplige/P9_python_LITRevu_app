@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h4>Vous êtes en train de poster en réponse à</h4>
+<div class="card text-center ticket">
+    <div class="card-header">{{ ticket.user }} demande une critique</div>
+    <div class="card-body">
+      <h5 class="card-title">{{ ticket.title }}</h5>
+      <p class="card-text">
+        {{ ticket.description }}
+      </p>
+      {% if ticket.image %}
+      <img class="ticket-img card-img-top" id="ti-img" src="{{ ticket.image.url }}">
+      {% endif %}
+    </div>
+    <div class="card-footer text-muted">{{ ticket.time_created }}</div>
+  </div>
+  <h5 class="card-title">critique</h5>
+<form action="" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Envoyer">
+ </form>
+
+{% endblock content %}

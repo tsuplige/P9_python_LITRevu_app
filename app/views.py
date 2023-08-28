@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from . import forms, models
 
 
@@ -15,32 +15,99 @@ def home(request):
     return render(request, 'app/home.html', {'combined_data': sorted_data})
 
 
+@login_required
 def ticket_upload(request):
     form = forms.TicketForm()
     if request.method == 'POST':
         form = forms.TicketForm(request.POST, request.FILES)
         if form.is_valid():
             ticket = form.save(commit=False)
-            # set the uploader to the user before saving the model
             ticket.user = request.user
-            # now we can save
             ticket.save()
             return redirect('home')
     return render(request, 'app/ticket_upload.html', context={'form': form})
     # return render(request, 'app/ticket.html')
 
 
-def ticket_update(request):
-    return render(request, 'app/ticket_update.html')
+@login_required
+def ticket_update(request, id):
+    ticket = models.Ticket.objects.get(id=id)
+
+    if request.method == 'POST':
+        form = forms.TicketForm (request.POST, instance=ticket)
+        if form.is_valid():
+            form.save()
+            return redirect('home')
+    else:
+        form = forms.TicketForm(instance=ticket)
+
+    return render(request, 'app/ticket_update.html', {'form': form})
 
 
-def critique(request):
-    return render(request, 'app/critique.html')
+@login_required
+def ticket_delete(request, id):
+    ticket = models.Ticket.objects.get(id=id)
+
+    if request.method == 'POST':
+        ticket.delete()
+        return redirect('home')
+
+    return render(request, 'app/ticket_delete.html', {'ticket': ticket})
 
 
-def critique_update(request):
-    return render(request, 'app/critique_update.html')
+@login_required
+def ticket_answer(request):
+    pass
 
 
+@login_required
+def review_upload(request):
+    review_form = forms.ReviewForm()
+    ticket_form = forms.TicketForm()
+    if request.method == 'POST':
+        review_form = forms.ReviewForm(request.POST)
+        ticket_form = forms.TicketForm(request.POST, request.FILES)
+        if all([review_form.is_valid(), ticket_form.is_valid()]):
+            ticket = ticket_form.save(commit=False)
+            ticket.user = request.user
+            ticket.save()
+            review = review_form.save(commit=False)
+            review.user = request.user
+            review.save()
+            return redirect('home')
+    context = {
+        'review_form': review_form,
+        'ticket_form': ticket_form,
+    }
+    return render(request, 'app/review_upload.html', context=context)
+
+
+@login_required
+def review_update(request, id):
+    review = models.Review.objects.get(id=id)
+
+    if request.method == 'POST':
+        form = forms.ReviewForm(request.POST, instance=review)
+        if form.is_valid():
+            form.save()
+            return redirect('home')
+    else:
+        form = forms.ReviewForm(instance=review)
+
+    return render(request, 'app/review_update.html', {'form': form, 'ticket': review.ticket})
+
+
+@login_required
+def review_delete(request, id):
+    review = models.Review.objects.get(id=id)
+
+    if request.method == 'POST':
+        review.delete()
+        return redirect('home')
+
+    return render(request, 'app/review_delete.html', {'review': review})
+
+
+@login_required
 def subscription(request):
     return render(request, 'app/subscription.html')

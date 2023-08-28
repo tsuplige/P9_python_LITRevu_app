@@ -16,9 +16,12 @@ urlpatterns = [
 
     path('ticket/upload', app.views.ticket_upload, name='ticket-upload'),
     path('ticket/<int:id>/change/', app.views.ticket_update, name='ticket-update'),
+    path('ticket/<int:id>/delete/', app.views.ticket_delete, name='ticket-delete'),
+    path('ticket/<int:id>/review/upload', app.views.ticket_answer, name='ticket-answer'),
 
-    path('critique/', app.views.critique, name='critique'),
-    path('critique/<int:id>/change/', app.views.critique_update, name='critique-update'),
+    path('review/upload', app.views.review_upload, name='review-upload'),
+    path('review/<int:id>/change/', app.views.review_update, name='review-update'),
+    path('review/<int:id>/delete/', app.views.review_delete, name='review-delete'),
 
     path('abonnements/', app.views.subscription, name='subscription'),
 

@@ -4,13 +4,14 @@
     <a href="{% url 'ticket-upload' %}" class="btn btn-primary"
       >Demander une critique</a
     >
-    <a href="{% url 'critique' %}" class="btn btn-primary"
+    <a href="{% url 'review-upload' %}" class="btn btn-primary"
       >Créer une critique</a
     >
   </nav>
 
   <div class="flux-content flux-center">
-    {% for item in combined_data %} {% if item.is_ticket is True %}
+    {% for item in combined_data %} 
+    {% if item.is_ticket is True %}
 
     <div class="card text-center ticket">
       <div class="card-header">{{ item.user }} demande une critique</div>
@@ -19,16 +20,50 @@
         <p class="card-text">
           {{ item.description }}
         </p>
+        {% if item.image %}
         <img class="ticket-img card-img-top" id="ti-img" src="{{ item.image.url }}">
+        {% endif %}
       </div>
       <div class="card-footer text-muted">{{ item.time_created }}</div>
+      {% if item.have_review is False%}
       <a href="#" class="btn btn-primary">Créer une critique</a>
+      {% endif %}
+      {% if user.is_authenticated %}
+        {% if user.is_superuser or ticket.user == user %}
+        <a href="{% url 'ticket-update' item.id %}" class="btn btn-primary">Modifier</a>
+        <a href="{% url 'ticket-delete' item.id %}" class="btn btn-primary">Supprimer</a>
+        {% endif %}
+      {% endif %}
     </div>
+
     {% else %}
-    <div class="review">
-      <h2>{{ item.headline }}</h2>
-      <p>{{ item.body }}</p>
-      <p>Date de création : {{ item.time_created }}</p>
+
+    <div class="card text-center ticket">
+      <div class="card-header">{{ item.user }} à publié une critique une critique</div>
+      <div class="card-body">
+        <h5 class="card-title">{{ item.headline }}</h5>
+        <div class="stars"></div>
+        <p class="card-text">
+          {{ item.body }}
+        </p>
+        <div class="card text-center ticket" style="width : 95%; margin: auto;">
+          <div class="card-header"> ticket de {{ item.ticket.user }}</div>
+          <div class="card-body">
+            <h5 class="card-title">{{ item.ticket.title }}</h5>
+            {% if item.ticket.image %}
+            <img class="ticket-img card-img-top" id="ti-img" src="{{ item.ticket.image.url }}">
+            {% endif %}
+          </div>
+          <div class="card-footer text-muted">{{ item.ticket.time_created }}</div>
+        </div>
+      </div>
+      <div class="card-footer text-muted">{{ item.time_created }}</div>
+      {% if user.is_authenticated %}
+        {% if user.is_superuser or ticket.user == user %}
+        <a href="{% url 'review-update' item.id %}" class="btn btn-primary">Modifier</a>
+        <a href="{% url 'review-delete' item.id %}" class="btn btn-primary">Supprimer</a>
+        {% endif %}
+      {% endif %}
     </div>
     {% endif %} {% endfor %}
   </div>

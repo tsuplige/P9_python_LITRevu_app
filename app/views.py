@@ -56,8 +56,24 @@ def ticket_delete(request, id):
 
 
 @login_required
-def ticket_answer(request):
-    pass
+def ticket_s_review(request, id):
+    ticket = models.Ticket.objects.get(id=id)
+    review_form = forms.ReviewForm()
+    if request.method == 'POST':
+        review_form = forms.ReviewForm(request.POST)
+        if review_form.is_valid():
+            review = review_form.save(commit=False)
+            review.user = request.user
+            review.ticket = ticket
+            ticket.have_review = True
+            ticket.save()
+            review.save()
+            return redirect('home')
+    context = {
+        'review_form': review_form,
+        'ticket': ticket,
+    }
+    return render(request, 'app/ticket_s_review.html', context=context)
 
 
 @login_required
@@ -70,6 +86,7 @@ def review_upload(request):
         if all([review_form.is_valid(), ticket_form.is_valid()]):
             ticket = ticket_form.save(commit=False)
             ticket.user = request.user
+            ticket.have_review = True
             ticket.save()
             review = review_form.save(commit=False)
             review.user = request.user
@@ -100,8 +117,12 @@ def review_update(request, id):
 @login_required
 def review_delete(request, id):
     review = models.Review.objects.get(id=id)
+    ticket = review.ticket
 
     if request.method == 'POST':
+        ticket.have_review = False
+        ticket.save()
+
         review.delete()
         return redirect('home')
 

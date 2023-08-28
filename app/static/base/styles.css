@@ -38,6 +38,16 @@ body {
   width: 30%;
 }
 
+.star {
+  color: #9255FF;
+  font-size: 25px;
+}
+
+.ticket-upload {
+  margin: 2% auto;
+  width: 60%;
+}
+
 #ti-img {
   height: 300px;
   width: auto;

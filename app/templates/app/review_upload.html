@@ -1,10 +1,20 @@
 {% extends 'base.html' %}
 {% block content %}
-<h2>Créer unE review</h2>
-    <form method="post" enctype="multipart/form-data">
+<div class="card text-center ticket-upload">
+    <div class="card-header ">
+        <h2>Créer une review</h2>
+    </div>
+    <div class="card-body">
+        <form method="post" enctype="multipart/form-data">
         {{ ticket_form.as_p }}
         {{ review_form.as_p }}
         {% csrf_token %}
-        <button type="submit" >Publier</button>
-    </form>
+        <a href="{% url 'home' %}" class="btn btn-outline-secondary">Retour</a>
+        <button class="btn btn-primary" type="submit" >Publier</button>
+    </form> 
+    </div>
+   
+    
+</div>
+
 {% endblock content %}

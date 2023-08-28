@@ -26,8 +26,9 @@ Pour installer et exécuter cette application sur votre propre environnement de 
 
 1. Clonez le référentiel depuis GitHub :
    ```bash
-   git clone https://github.com/votre-utilisateur/litrevu.git
-   cd litrevu
+   git clone https://github.com/tsuplige/P9_python_LITRevu_app.git
+   
+   cd P9_python_LITRevu_app
    ```
 
 2. Créez un environnement virtuel (recommandé) :

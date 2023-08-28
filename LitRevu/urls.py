@@ -17,7 +17,7 @@ urlpatterns = [
     path('ticket/upload', app.views.ticket_upload, name='ticket-upload'),
     path('ticket/<int:id>/change/', app.views.ticket_update, name='ticket-update'),
     path('ticket/<int:id>/delete/', app.views.ticket_delete, name='ticket-delete'),
-    path('ticket/<int:id>/review/upload', app.views.ticket_answer, name='ticket-answer'),
+    path('ticket/<int:id>/review/upload', app.views.ticket_s_review, name='ticket-review'),
 
     path('review/upload', app.views.review_upload, name='review-upload'),
     path('review/<int:id>/change/', app.views.review_update, name='review-update'),

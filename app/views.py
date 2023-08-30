@@ -1,18 +1,40 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth import get_user_model
+from authentication.models import User
 from . import forms, models
+from django.conf import settings
 
 
 @login_required
 def home(request):
-    tickets = list(models.Ticket.objects.all())
-    reviews = list(models.Review.objects.all())
+    data = get_user_and_followed_article(request.user, False)
+
+    return render(request, 'app/home.html', {'combined_data': data})
+
+
+@login_required
+def user_self_posts(request):
+    data = get_user_and_followed_article(request.user, True)
+
+    return render(request, 'app/home.html', {'combined_data': data})
+
+
+def get_user_and_followed_article(user, only_user):
+    reviews = list(models.Review.objects.filter(user=user))
+    tickets = list(models.Ticket.objects.filter(user=user))
+    if only_user is not True:
+        followed_users = user.following.all()
+        for data in followed_users:
+            reviews += list(models.Review.objects.filter(user=data.followed_user))
+            tickets += list(models.Ticket.objects.filter(user=data.followed_user))
 
     combined_data = tickets + reviews
 
-    sorted_data = sorted(combined_data, key=lambda x: x.time_created, reverse=True)
+    sorted_data = sorted(combined_data, key=lambda x: x.time_created,
+                         reverse=True)
 
-    return render(request, 'app/home.html', {'combined_data': sorted_data})
+    return sorted_data
 
 
 @login_required
@@ -34,7 +56,7 @@ def ticket_update(request, id):
     ticket = models.Ticket.objects.get(id=id)
 
     if request.method == 'POST':
-        form = forms.TicketForm (request.POST, instance=ticket)
+        form = forms.TicketForm(request.POST, instance=ticket)
         if form.is_valid():
             form.save()
             return redirect('home')
@@ -90,6 +112,7 @@ def review_upload(request):
             ticket.save()
             review = review_form.save(commit=False)
             review.user = request.user
+            review.ticket = ticket
             review.save()
             return redirect('home')
     context = {
@@ -111,7 +134,8 @@ def review_update(request, id):
     else:
         form = forms.ReviewForm(instance=review)
 
-    return render(request, 'app/review_update.html', {'form': form, 'ticket': review.ticket})
+    return render(request, 'app/review_update.html', {'form': form,
+                                                      'ticket': review.ticket})
 
 
 @login_required
@@ -128,7 +152,48 @@ def review_delete(request, id):
 
     return render(request, 'app/review_delete.html', {'review': review})
 
-
 @login_required
 def subscription(request):
-    return render(request, 'app/subscription.html')
+    followed_users = request.user.following.all()
+    user_followers = request.user.followed_by.all()
+    user_search_form = forms.UserSearchForm()  # Créez une instance du formulaire
+
+    if request.method == 'POST':
+        user_search_form = forms.UserSearchForm(request.POST)
+        if user_search_form.is_valid():
+            search_query = user_search_form.cleaned_data['username_search'].strip()
+            if search_query:
+                users_found = User.objects.filter(
+                    username__icontains=search_query
+                ).exclude(pk=request.user.pk)
+            else:
+                users_found = User.objects.none()
+
+            context = {
+                'users_found': users_found,
+                'followed_users': followed_users,
+                'user_search_form': user_search_form,
+                'user_followers': user_followers
+            }
+            print(context)
+
+            return render(request, 'app/subscription.html', context=context)
+    print(user_followers)
+    return render(request, 'app/subscription.html', {
+        'followed_users': followed_users,
+        'user_search_form': user_search_form,
+        'user_followers': user_followers})
+
+
+@login_required
+def follow_user(request, user_id):
+    followed_user = get_object_or_404(User, pk=user_id)
+    request.user.follow(followed_user)
+    return redirect('subscription')
+
+
+@login_required
+def unfollow_user(request, user_id):
+    followed_user = get_object_or_404(User, pk=user_id)
+    request.user.unfollow(followed_user)
+    return redirect('subscription')

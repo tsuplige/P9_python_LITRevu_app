@@ -43,3 +43,15 @@ class UserFollows(models.Model):
         # ensures we don't get multiple UserFollows instances
         # for unique user-user_followed pairs
         unique_together = ('user', 'followed_user', )
+
+    @classmethod
+    def follow(cls, user, followed_user):
+        if not cls.objects.filter(user=user, followed_user=followed_user).exists():
+            cls.objects.create(user=user, followed_user=followed_user)
+
+    @classmethod
+    def unfollow(cls, user, followed_user):
+        cls.objects.filter(user=user, followed_user=followed_user).delete()
+
+    def __str__(self):
+        return f'{self.user} follows {self.followed_user}'

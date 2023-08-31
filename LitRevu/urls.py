@@ -14,6 +14,7 @@ urlpatterns = [
 
     path('home/', app.views.home, name='home'),
     path('posts/', app.views.user_self_posts, name='posts'),
+    path('posts/user/<int:id>/', app.views.users_self_posts, name='user-posts'),
 
     path('ticket/upload', app.views.ticket_upload, name='ticket-upload'),
     path('ticket/<int:id>/change/', app.views.ticket_update,
@@ -23,7 +24,7 @@ urlpatterns = [
     path('ticket/<int:id>/review/upload', app.views.ticket_s_review,
          name='ticket-review'),
 
-    path('review/upload', app.views.review_upload, name='review-upload'),
+    path('review/upload/', app.views.review_upload, name='review-upload'),
     path('review/<int:id>/change/', app.views.review_update,
          name='review-update'),
     path('review/<int:id>/delete/', app.views.review_delete,

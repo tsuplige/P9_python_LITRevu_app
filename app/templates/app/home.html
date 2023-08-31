@@ -1,5 +1,6 @@
 {% extends 'base.html' %} {% block content %}
 <div class="flux">
+  {% if user_page.is_user_page is not True %}
   <nav class="flux-nav flux-center">
     <a href="{% url 'ticket-upload' %}" class="btn btn-outline-primary btn-lg"
       >Demander une critique</a
@@ -9,19 +10,28 @@
     >
   </nav>
 
+  {% else %}
+  {% endif %}
+  {% if user_page.is_user_page is True %}
+  <h2 class='user-page-title'> Postes de {{ user_page.user.username }}</h2>
+
+  {% else %}
+  {% endif %}
+  
+
   <div class="flux-content flux-center">
     {% for item in combined_data %} 
     {% if item.is_ticket is True %}
 
     <div class="card text-center ticket">
-      <div class="card-header">{{ item.user }} demande une critique</div>
+      <div class="card-header"><a class='flux-user-link' href="{% url 'user-posts' item.user.id %}">{{ item.user }}</a> demande une critique</div>
       <div class="card-body">
         <h5 class="card-title">{{ item.title }}</h5>
         <p class="card-text">
           {{ item.description }}
         </p>
         {% if item.image %}
-        <img class="ticket-img card-img-top" id="ti-img" src="{{ item.image.url }}">
+        <img class="ticket-img card-img-top" alt=" couverture du livre : {{ item.title }}" id="ti-img" src="{{ item.image.url }}">
         {% endif %}
       </div>
       <div class="card-footer text-muted">{{ item.time_created }}</div>
@@ -45,7 +55,7 @@
     {% else %}
 
     <div class="card text-center review">
-      <div class="card-header">{{ item.user }} à publié une critique une critique</div>
+      <div class="card-header"><a class='flux-user-link' href="{% url 'user-posts' item.user.id %}">{{ item.user }}</a> à publié une critique</div>
       <div class="card-body">
         <h5 class="card-title">{{ item.headline }}</h5>
 
@@ -58,23 +68,26 @@
           {{ item.body }}
         </p>
         <div class="card text-center ticket" style="width : 95%; margin: auto;">
-          <div class="card-header"> ticket de {{ item.ticket.user }}</div>
+          <div class="card-header"> ticket de <a class='flux-user-link' href="{% url 'user-posts' item.user.id %}">{{ item.ticket.user.username }}</a></div>
           <div class="card-body">
             <h5 class="card-title">{{ item.ticket.title }}</h5>
             {% if item.ticket.image %}
-            <img class="ticket-img card-img-top" id="ti-img" src="{{ item.ticket.image.url }}">
+            <img class="ticket-img card-img-top" alt=" couverture du livre : {{ item.title }}" id="ti-img" src="{{ item.ticket.image.url }}">
             {% endif %}
           </div>
           <div class="card-footer text-muted">{{ item.ticket.time_created }}</div>
         </div>
       </div>
       <div class="card-footer text-muted">{{ item.time_created }}</div>
-      {% if user.is_authenticated %}
+      <nav>
+        {% if user.is_authenticated %}
         {% if user.is_superuser or item.user == user %}
         <a href="{% url 'review-update' item.id %}" class="btn btn-outline-secondary">Modifier</a>
         <a href="{% url 'review-delete' item.id %}" class="btn btn-outline-danger">Supprimer</a>
         {% endif %}
       {% endif %}
+      </nav>
+      
     </div>
     {% endif %} {% endfor %}
   </div>

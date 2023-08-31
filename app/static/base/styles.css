@@ -5,12 +5,27 @@
 body {
   width: 100%;
 }
+body header {
+  margin-bottom: 1%;
+}
+body .user-page-title {
+  margin: auto;
+  margin-bottom: 3%;
+}
+body .ticket-update {
+  width: 50%;
+  margin: 2% auto;
+}
+body .ticket-update-img {
+  height: 200px;
+  -o-object-fit: contain;
+     object-fit: contain;
+}
 
 .flux {
   display: flex;
   width: 100%;
   flex-direction: column;
-  margin: 3% 0;
 }
 .flux-center {
   display: flex;
@@ -28,7 +43,7 @@ body {
   align-items: center;
 }
 .flux-content .card {
-  width: 45%;
+  width: 55%;
   margin-bottom: 3%;
 }
 .flux ticket {
@@ -51,4 +66,28 @@ body {
 #ti-img {
   height: 300px;
   width: auto;
+}
+
+.subscription {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  margin-top: 6%;
+  justify-content: center;
+  max-height: 55%;
+}
+.subscription .search-btn {
+  margin: 10px 0;
+}
+.subscription ul {
+  list-style: none;
+}
+.subscription .card {
+  margin: 10px;
+}
+.subscription .card-subscription {
+  width: 30%;
+}
+.subscription .card-subscription .card-body {
+  overflow: auto;
 }/*# sourceMappingURL=styles.css.map */

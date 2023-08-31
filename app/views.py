@@ -20,6 +20,18 @@ def user_self_posts(request):
     return render(request, 'app/home.html', {'combined_data': data})
 
 
+@login_required
+def users_self_posts(request, id):
+    user = User.objects.get(id=id)
+    data = get_user_and_followed_article(user, True)
+    user_page = {
+        'is_user_page': True,
+        'user': user,
+        }
+    return render(request, 'app/home.html', {'combined_data': data,
+                                             'user_page': user_page})
+
+
 def get_user_and_followed_article(user, only_user):
     reviews = list(models.Review.objects.filter(user=user))
     tickets = list(models.Ticket.objects.filter(user=user))
@@ -56,10 +68,12 @@ def ticket_update(request, id):
     ticket = models.Ticket.objects.get(id=id)
 
     if request.method == 'POST':
-        form = forms.TicketForm(request.POST, instance=ticket)
-        if form.is_valid():
-            form.save()
-            return redirect('home')
+        if request.user == review.user or request.user.is_superuser:
+            form = forms.TicketForm(request.POST, instance=ticket)
+            if form.is_valid():
+                form.save()
+                return redirect('home')
+        return redirect('home')
     else:
         form = forms.TicketForm(instance=ticket)
 
@@ -71,7 +85,9 @@ def ticket_delete(request, id):
     ticket = models.Ticket.objects.get(id=id)
 
     if request.method == 'POST':
-        ticket.delete()
+        if request.user == ticket.user or request.user.is_superuser:
+            ticket.delete()
+            return redirect('home')
         return redirect('home')
 
     return render(request, 'app/ticket_delete.html', {'ticket': ticket})
@@ -127,10 +143,12 @@ def review_update(request, id):
     review = models.Review.objects.get(id=id)
 
     if request.method == 'POST':
-        form = forms.ReviewForm(request.POST, instance=review)
-        if form.is_valid():
-            form.save()
-            return redirect('home')
+        if request.user == review.user or request.user.is_superuser:
+            form = forms.ReviewForm(request.POST, instance=review)
+            if form.is_valid():
+                form.save()
+                return redirect('home')
+        return redirect('home')    
     else:
         form = forms.ReviewForm(instance=review)
 
@@ -144,13 +162,15 @@ def review_delete(request, id):
     ticket = review.ticket
 
     if request.method == 'POST':
-        ticket.have_review = False
-        ticket.save()
-
-        review.delete()
+        if request.user == review.user or request.user.is_superuser:
+            ticket.have_review = False
+            ticket.save()
+            review.delete()
+            return redirect('home')
         return redirect('home')
 
     return render(request, 'app/review_delete.html', {'review': review})
+
 
 @login_required
 def subscription(request):
@@ -161,7 +181,8 @@ def subscription(request):
     if request.method == 'POST':
         user_search_form = forms.UserSearchForm(request.POST)
         if user_search_form.is_valid():
-            search_query = user_search_form.cleaned_data['username_search'].strip()
+            search_query = user_search_form.cleaned_data[
+                'username_search'].strip()
             if search_query:
                 users_found = User.objects.filter(
                     username__icontains=search_query

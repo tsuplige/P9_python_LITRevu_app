@@ -1,25 +1,31 @@
-{% extends 'base.html' %}
-{% block content %}
-
-<h4>Vous êtes en train de poster en réponse à</h4>
-<div class="card text-center ticket">
-    <div class="card-header">{{ ticket.user }} demande une critique</div>
-    <div class="card-body">
-      <h5 class="card-title">{{ ticket.title }}</h5>
-      <p class="card-text">
-        {{ ticket.description }}
-      </p>
-      {% if ticket.image %}
-      <img class="ticket-img card-img-top" id="ti-img" src="{{ ticket.image.url }}">
-      {% endif %}
-    </div>
-    <div class="card-footer text-muted">{{ ticket.time_created }}</div>
+{% extends 'base.html' %} {% block content %}
+<div class="card text-center ticket-update">
+  <div class="card-header">Vous êtes en train de poster en réponse à {{ ticket.user }}</div>
+  <div class="card-body">
+    <h5 class="card-title">{{ ticket.title }}</h5>
+    <p class="card-text">{{ ticket.description }}</p>
+    {% if ticket.image %}
+    <img
+      class="ticket-img card-img-top ticket-update-img"
+      src="{{ ticket.image.url }}"
+    />
+    {% endif %}
   </div>
-  <h5 class="card-title">critique</h5>
-<form action="" method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Envoyer">
- </form>
+  <div class="card-footer text-muted">{{ ticket.time_created }}</div>
+</div>
+<div class="card text-center ticket-upload">
+  <div class="card-header">
+    <h2>Créer une review</h2>
+  </div>
+  <div class="card-body">
+    <p><strong>information sur le livre :</strong></p>
+    <form method="post" enctype="multipart/form-data">
+      <p><strong>review :</strong></p>
+      {{ form.as_p }} {% csrf_token %}
+      <a href="{% url 'home' %}" class="btn btn-outline-secondary">Retour</a>
+      <button class="btn btn-primary" type="submit">Publier</button>
+    </form>
+  </div>
+</div>
 
 {% endblock content %}

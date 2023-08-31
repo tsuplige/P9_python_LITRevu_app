@@ -67,15 +67,15 @@ LITRevu propose les fonctionnalités suivantes :
 
 ## Cahier des charges
 
-Consultez le [cahier des charges](cahier-des-charges.pdf) pour une description détaillée des besoins fonctionnels et techniques du site.
+Consultez le [cahier des charges](/project_files/cahier-des-charges.pdf) pour une description détaillée des besoins fonctionnels et techniques du site.
 
 ## Veille technologique
 
-Pour choisir les outils nécessaires à ce projet, nous avons réalisé une veille technologique. Vous pouvez consulter le rapport de veille au format PDF [ici](veille-technologique.pdf).
+Pour choisir les outils nécessaires à ce projet, nous avons réalisé une veille technologique. Vous pouvez consulter le rapport de veille au format PDF [ici](/project_files/veille-technologique.pdf).
 
 ## Wireframes
 
-Consultez les [wireframes](wireframes/) fournis par notre UX designer pour vous guider dans la mise en page de l'application. Assurez-vous de suivre les bonnes pratiques d’accessibilité du référentiel WCAG pour garantir l'accessibilité à tous les utilisateurs.
+Consultez les [wireframes](/project_files/wireframes.pdf) fournis par notre UX designer pour vous guider dans la mise en page de l'application. Assurez-vous de suivre les bonnes pratiques d’accessibilité du référentiel WCAG pour garantir l'accessibilité à tous les utilisateurs.
 
 ## Base de données
 

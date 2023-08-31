@@ -22,7 +22,6 @@ class Review(models.Model):
     is_ticket = models.BooleanField(default=False)
     ticket = models.ForeignKey(to=Ticket, on_delete=models.CASCADE, null=True)
     rating = models.PositiveSmallIntegerField(
-        # validates that rating must be between 0 and 5
         validators=[MinValueValidator(0), MaxValueValidator(5)])
     headline = models.CharField(max_length=128)
     body = models.CharField(max_length=8192, blank=True)
@@ -34,10 +33,12 @@ class Review(models.Model):
 class UserFollows(models.Model):
     # Your UserFollows model definition goes here
     user = models.ForeignKey(
-        to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='following')
+        to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
+        related_name='following')
 
     followed_user = models.ForeignKey(
-        to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='followed_by')
+        to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
+        related_name='followed_by')
 
     class Meta:
         # ensures we don't get multiple UserFollows instances
@@ -46,7 +47,8 @@ class UserFollows(models.Model):
 
     @classmethod
     def follow(cls, user, followed_user):
-        if not cls.objects.filter(user=user, followed_user=followed_user).exists():
+        if not cls.objects.filter(user=user,
+                                  followed_user=followed_user).exists():
             cls.objects.create(user=user, followed_user=followed_user)
 
     @classmethod

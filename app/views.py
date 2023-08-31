@@ -1,9 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required, permission_required
-from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required
 from authentication.models import User
 from . import forms, models
-from django.conf import settings
 
 
 @login_required
@@ -33,13 +31,24 @@ def users_self_posts(request, id):
 
 
 def get_user_and_followed_article(user, only_user):
+    """permets de récuperer les donnée pour le flux
+
+    Args:
+        user (Object.User): utilisateur
+        only_user (Boolean): vérifie quel donnée on récupère
+
+    Returns:
+        List: list de ticket et de review trié
+    """
     reviews = list(models.Review.objects.filter(user=user))
     tickets = list(models.Ticket.objects.filter(user=user))
     if only_user is not True:
         followed_users = user.following.all()
         for data in followed_users:
-            reviews += list(models.Review.objects.filter(user=data.followed_user))
-            tickets += list(models.Ticket.objects.filter(user=data.followed_user))
+            reviews += list(models.Review.objects.filter(
+                user=data.followed_user))
+            tickets += list(models.Ticket.objects.filter(
+                user=data.followed_user))
 
     combined_data = tickets + reviews
 
@@ -60,7 +69,6 @@ def ticket_upload(request):
             ticket.save()
             return redirect('home')
     return render(request, 'app/ticket_upload.html', context={'form': form})
-    # return render(request, 'app/ticket.html')
 
 
 @login_required
@@ -68,7 +76,7 @@ def ticket_update(request, id):
     ticket = models.Ticket.objects.get(id=id)
 
     if request.method == 'POST':
-        if request.user == review.user or request.user.is_superuser:
+        if request.user == ticket.user or request.user.is_superuser:
             form = forms.TicketForm(request.POST, instance=ticket)
             if form.is_valid():
                 form.save()
@@ -148,7 +156,7 @@ def review_update(request, id):
             if form.is_valid():
                 form.save()
                 return redirect('home')
-        return redirect('home')    
+        return redirect('home')
     else:
         form = forms.ReviewForm(instance=review)
 
@@ -176,7 +184,7 @@ def review_delete(request, id):
 def subscription(request):
     followed_users = request.user.following.all()
     user_followers = request.user.followed_by.all()
-    user_search_form = forms.UserSearchForm()  # Créez une instance du formulaire
+    user_search_form = forms.UserSearchForm()
 
     if request.method == 'POST':
         user_search_form = forms.UserSearchForm(request.POST)
